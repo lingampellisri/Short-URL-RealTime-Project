@@ -2,6 +2,7 @@
 const UrlModel =require("../models/url");
 
 
+
 const shortid = require('shortid');
 
 async function handleGenerateNewShortURL(req, res) {
@@ -23,15 +24,41 @@ const newData = UrlModel.create({
     // const SaveData = await newData.save();
 
     res.status(200).json({ msg: "Data Added Successfully", data: Shortidd});
+    //    return  res.render("home" ,{
+    //     id:Shortidd
+    //     });
+
+    //  const Data=await UrlModel.find({});
+
+    //   return  res.render("home" ,{
+    //  id:Shortidd,
+    //     urls:Data,
+    // });
 }
 
 
 
 async function getAllUrls(req,res) {
 
-    const Data=await UrlModel.find();
+    const Data=await UrlModel.find({});
 
-    res.status(200).json(Data);
+    const html= `
+
+        <ol>
+                ${Data.map((url)=> ` <li> ${url.shortId}-${url.redirectURL}  -${url.visitHistory.length} and Complete shortURL http://localhost:5000/url/${url.shortId} </li>`).join("")}
+        </ol>
+
+
+    
+    `
+
+    // console.log(Data);
+
+    // res.status(200).json(Data);
+   return  res.render("home" ,{
+    
+        urls:Data,
+    });
     
 }
 

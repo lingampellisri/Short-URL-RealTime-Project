@@ -6,10 +6,13 @@ const router=require("./routes/url")
 const {Connection}=require("./connect"); 
 const URL=require("./models/url")
 
+const path=require("path");
+
 
 const app=express();
 
 app.use(express.json());
+app.use(express.urlencoded({extended:false}));
 
 const PORT=5000;
 
@@ -19,23 +22,12 @@ Connection("mongodb://127.0.0.1:27017/").then(()=>
         console.log("Connected to mongoDb");
 })
 
+app.set("view engine","ejs");
+app.set("views",path.resolve("./views"));
+
 app.use("/url",router);
 
-app.get("/:shortId",async (req,res)=>
-{
-    const shortId=req.params.shortId;
-  const entry=  await  URL.findOneAndUpdate({
-        shortId
-    },
 
-    {
-        $push:{
-            visitHistory: {timestamp :Date.now()},
-        }
-    }
-);
-res.redirect(entry.redirectURL);
-})
 
 
 
